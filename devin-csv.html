@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>CSV出力項目選択モーダル</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- Metronic Theme CSS (簡易版) -->
+    <style>
+      .md-checkbox {
+        position: relative;
+        margin: 10px 0;
+        padding-left: 28px;
+      }
+      .md-checkbox input[type="checkbox"] {
+        visibility: hidden;
+        position: absolute;
+      }
+      .md-checkbox label {
+        padding-left: 0;
+      }
+      .md-checkbox .box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
+      .md-checkbox .check {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        border: 2px solid #3598dc;
+        border-top: none;
+        border-right: none;
+        transform: rotate(-45deg);
+        display: none;
+      }
+      .md-checkbox input[type="checkbox"]:checked ~ .box {
+        border-color: #3598dc;
+      }
+      .md-checkbox input[type="checkbox"]:checked ~ .check {
+        display: block;
+      }
+      .modal-header {
+        background-color: #3598dc;
+        color: white;
+      }
+      .btn.red {
+        background-color: #e7505a;
+        color: white;
+      }
+      .btn.default {
+        background-color: #e1e5ec;
+      }
+      .select-all-wrapper {
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- モーダルを表示するためのボタン -->
+    <div class="container" style="margin-top: 50px">
+      <h1>kamui tracker CSV出力項目選択デモ</h1>
+      <p>
+        以下のボタンをクリックすると、CSV出力項目を選択するモーダルダイアログが表示されます。
+      </p>
+      <button type="button" class="btn btn-primary csv-download-button">
+        CSVダウンロード
+      </button>
+    </div>
+
+    <!-- モーダルダイアログ -->
+    <div
+      class="modal fade bs-modal-md"
+      id="modal-csv-columns"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+            ></button>
+            <h4 class="modal-title">CSV出力項目の選択</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <p>ダウンロードするCSVに含める項目を選択してください</p>
+              <div class="select-all-wrapper mb-3">
+                <label>
+                  <input type="checkbox" id="select-all-columns" checked />
+                  全て選択/解除
+                </label>
+              </div>
+              <div class="columns-list">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-platform_key"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="platform_key"
+                      />
+                      <label for="col-platform_key">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> チャンネルID
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-platform_title"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="platform_title"
+                      />
+                      <label for="col-platform_title">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> チャンネル名
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-channel_url"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="channel_url"
+                      />
+                      <label for="col-channel_url">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> チャンネルURL
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-platform_thumbnail_url"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="platform_thumbnail_url"
+                      />
+                      <label for="col-platform_thumbnail_url">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> チャンネルアイコンURL
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-kt_category"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="kt_category"
+                      />
+                      <label for="col-kt_category">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> カテゴリ
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-subscriber_count"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="subscriber_count"
+                      />
+                      <label for="col-subscriber_count">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 登録者数
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-subscriber_count_by_period"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="subscriber_count_by_period"
+                      />
+                      <label for="col-subscriber_count_by_period">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 期間別登録者獲得数
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-view_count_by_period"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="view_count_by_period"
+                      />
+                      <label for="col-view_count_by_period">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 期間別視聴回数
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-estimated_view_count_7"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="estimated_view_count_7"
+                      />
+                      <label for="col-estimated_view_count_7">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 推定視聴回数（投稿7日）
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-estimated_view_count_30"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="estimated_view_count_30"
+                      />
+                      <label for="col-estimated_view_count_30">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 推定視聴回数（投稿30日）
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-estimated_view_count_long_duration_7"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="estimated_view_count_long_duration_7"
+                      />
+                      <label for="col-estimated_view_count_long_duration_7">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                        推定視聴回数61秒以上（投稿7日）
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-estimated_view_count_long_duration_30"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="estimated_view_count_long_duration_30"
+                      />
+                      <label for="col-estimated_view_count_long_duration_30">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                        推定視聴回数61秒以上（投稿30日）
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-office"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="office"
+                      />
+                      <label for="col-office">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 事務所
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-company"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="company"
+                      />
+                      <label for="col-company">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 会社
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-gender"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="gender"
+                      />
+                      <label for="col-gender">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 性別
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-tie_up"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="tie_up"
+                      />
+                      <label for="col-tie_up">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> タイアップ実績
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-channel_opened_at"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="channel_opened_at"
+                      />
+                      <label for="col-channel_opened_at">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> チャンネル開設日
+                      </label>
+                    </div>
+                    <div class="md-checkbox">
+                      <input
+                        type="checkbox"
+                        id="col-relevance"
+                        class="csv-column-checkbox md-check"
+                        checked
+                        data-column="relevance"
+                      />
+                      <label for="col-relevance">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 関連度
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn default" data-dismiss="modal">
+              キャンセル
+            </button>
+            <button
+              type="button"
+              class="btn red"
+              id="download-csv-with-columns"
+            >
+              ダウンロード
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // CSVダウンロードボタンのクリックイベント
+        $(".csv-download-button").on("click", function (e) {
+          e.preventDefault();
+          $("#modal-csv-columns").modal("show");
+        });
+
+        // 全選択/全解除の処理
+        $("#select-all-columns").on("change", function () {
+          var isChecked = $(this).prop("checked");
+          $(".csv-column-checkbox").prop("checked", isChecked);
+        });
+
+        // 個別のチェックボックスの変更時に全選択チェックボックスの状態を更新
+        $(".csv-column-checkbox").on("change", function () {
+          var allChecked =
+            $(".csv-column-checkbox:checked").length ===
+            $(".csv-column-checkbox").length;
+          $("#select-all-columns").prop("checked", allChecked);
+        });
+
+        // ダウンロードボタンのクリックイベント
+        $("#download-csv-with-columns").on("click", function () {
+          var selectedColumns = [];
+          $(".csv-column-checkbox:checked").each(function () {
+            selectedColumns.push($(this).data("column"));
+          });
+
+          if (selectedColumns.length === 0) {
+            alert("少なくとも1つの項目を選択してください");
+            return;
+          }
+
+          // 実際のダウンロード処理の代わりに選択された項目を表示
+          alert("選択された項目: " + selectedColumns.join(", "));
+          $("#modal-csv-columns").modal("hide");
+        });
+      });
+    </script>
+  </body>
+</html>
