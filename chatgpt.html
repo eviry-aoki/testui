@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSV 項目選択 UI サンプル</title>
+    <!-- Tailwind CDN (preview build) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .pattern {
+        display: none;
+      }
+      .pattern.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <div class="max-w-6xl mx-auto p-6">
+      <h1 class="text-2xl font-bold mb-6">CSV 項目選択 UI サンプル集</h1>
+
+      <!-- Pattern switcher -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button
+          class="pattern-btn px-4 py-2 rounded-xl bg-white shadow"
+          data-target="simple"
+        >
+          1. シンプルリスト
+        </button>
+        <button
+          class="pattern-btn px-4 py-2 rounded-xl bg-white shadow"
+          data-target="accordion"
+        >
+          2. カテゴリアコーディオン
+        </button>
+        <button
+          class="pattern-btn px-4 py-2 rounded-xl bg-white shadow"
+          data-target="duallist"
+        >
+          3. デュアルリスト
+        </button>
+        <button
+          class="pattern-btn px-4 py-2 rounded-xl bg-white shadow"
+          data-target="tiles"
+        >
+          4. タイルカード
+        </button>
+        <button
+          class="pattern-btn px-4 py-2 rounded-xl bg-white shadow"
+          data-target="wizard"
+        >
+          5. 3 ステップウィザード
+        </button>
+      </div>
+
+      <!-- 1. シンプルリスト -->
+      <section
+        id="simple"
+        class="pattern active bg-white p-6 rounded-2xl shadow"
+      >
+        <h2 class="text-xl font-semibold mb-4">1. シンプルリスト＋検索バー</h2>
+        <div class="flex items-center gap-4 mb-4">
+          <input
+            id="simple-search"
+            type="text"
+            placeholder="キーワード検索"
+            class="border rounded px-3 py-2 w-full max-w-sm"
+          />
+          <button id="simple-toggle-all" class="border px-3 py-2 rounded">
+            すべて選択
+          </button>
+        </div>
+        <div
+          id="simple-list"
+          class="space-y-2 h-72 overflow-y-auto border p-3 rounded"
+        ></div>
+      </section>
+
+      <!-- 2. カテゴリアコーディオン -->
+      <section id="accordion" class="pattern bg-white p-6 rounded-2xl shadow">
+        <h2 class="text-xl font-semibold mb-4">2. カテゴリ別アコーディオン</h2>
+        <div id="accordion-wrapper" class="space-y-4"></div>
+      </section>
+
+      <!-- 3. デュアルリスト -->
+      <section id="duallist" class="pattern bg-white p-6 rounded-2xl shadow">
+        <h2 class="text-xl font-semibold mb-4">3. デュアルリスト</h2>
+        <div class="flex gap-4">
+          <!-- Available -->
+          <div class="flex-1">
+            <h3 class="font-medium mb-2">利用可能項目</h3>
+            <select
+              id="dual-available"
+              multiple
+              class="w-full h-72 border rounded"
+            ></select>
+          </div>
+          <!-- Buttons -->
+          <div class="flex flex-col gap-2 justify-center">
+            <button id="dual-add" class="border px-3 py-1 rounded">▶︎</button>
+            <button id="dual-remove" class="border px-3 py-1 rounded">
+              ◀︎
+            </button>
+          </div>
+          <!-- Selected -->
+          <div class="flex-1">
+            <h3 class="font-medium mb-2">エクスポートする項目</h3>
+            <select
+              id="dual-selected"
+              multiple
+              class="w-full h-72 border rounded"
+            ></select>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. タイルカード -->
+      <section id="tiles" class="pattern bg-white p-6 rounded-2xl shadow">
+        <h2 class="text-xl font-semibold mb-4">
+          4. タイルカード・マルチセレクト
+        </h2>
+        <div
+          id="tile-grid"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+        ></div>
+      </section>
+
+      <!-- 5. 3 ステップウィザード -->
+      <section id="wizard" class="pattern bg-white p-6 rounded-2xl shadow">
+        <h2 class="text-xl font-semibold mb-4">5. 3 ステップウィザード</h2>
+        <!-- Step Indicator -->
+        <div class="flex gap-2 mb-6" id="wizard-steps">
+          <div
+            class="wizard-step rounded-full w-8 h-8 flex items-center justify-center bg-blue-600 text-white"
+            data-step="1"
+          >
+            1
+          </div>
+          <div
+            class="wizard-step rounded-full w-8 h-8 flex items-center justify-center bg-gray-300"
+            data-step="2"
+          >
+            2
+          </div>
+          <div
+            class="wizard-step rounded-full w-8 h-8 flex items-center justify-center bg-gray-300"
+            data-step="3"
+          >
+            3
+          </div>
+        </div>
+        <!-- Step 1: Template Choice -->
+        <div class="wizard-panel" data-step="1">
+          <h3 class="font-medium mb-2">テンプレート選択</h3>
+          <label class="block mb-2"
+            ><input
+              type="radio"
+              name="tpl"
+              value="basic"
+              class="mr-2"
+              checked
+            />
+            基本指標のみ</label
+          >
+          <label class="block mb-2"
+            ><input type="radio" name="tpl" value="full" class="mr-2" />
+            完全版</label
+          >
+          <label class="block mb-4"
+            ><input type="radio" name="tpl" value="custom" class="mr-2" />
+            カスタム</label
+          >
+          <button id="wizard-next" class="border px-4 py-2 rounded">
+            次へ
+          </button>
+        </div>
+        <!-- Step 2: Custom Selection (re‑use simple list) -->
+        <div class="wizard-panel hidden" data-step="2">
+          <h3 class="font-medium mb-2">カスタム選択</h3>
+          <div
+            id="wizard-fields"
+            class="space-y-2 h-52 overflow-y-auto border p-3 rounded mb-4"
+          ></div>
+          <button id="wizard-back" class="border px-4 py-2 rounded mr-2">
+            戻る
+          </button>
+          <button id="wizard-next2" class="border px-4 py-2 rounded">
+            次へ
+          </button>
+        </div>
+        <!-- Step 3: Preview -->
+        <div class="wizard-panel hidden" data-step="3">
+          <h3 class="font-medium mb-2">プレビュー＆ダウンロード</h3>
+          <div id="wizard-preview" class="bg-gray-100 p-4 rounded mb-4"></div>
+          <button id="wizard-back2" class="border px-4 py-2 rounded mr-2">
+            戻る
+          </button>
+          <button
+            id="wizard-finish"
+            class="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            ダウンロード
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // ========= フィールドデータ =========
+      const fields = [
+        "チャンネルID",
+        "チャンネル名",
+        "チャンネルURL",
+        "チャンネルアイコンURL",
+        "カテゴリ",
+        "登録者数",
+        "期間別登録者獲得数",
+        "期間別視聴回数",
+        "推定視聴回数（投稿7日）",
+        "推定視聴回数（投稿30日）",
+        "推定視聴回数61秒以上（投稿7日）",
+        "推定視聴回数61秒以上（投稿30日）",
+        "推定視聴回数60秒以下（投稿7日）",
+        "推定視聴回数60秒以下（投稿30日）",
+        "事務所",
+        "会社",
+        "性別",
+        "タイアップ実績",
+        "チャンネル開設日",
+        "関連度",
+      ];
+
+      // ========= タブ切替 =========
+      document.querySelectorAll(".pattern-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".pattern")
+            .forEach((p) => p.classList.remove("active"));
+          document.getElementById(btn.dataset.target).classList.add("active");
+        });
+      });
+
+      // ========= 1. シンプルリスト =========
+      function renderSimpleList() {
+        const container = document.getElementById("simple-list");
+        container.innerHTML = "";
+        fields.forEach((f) => {
+          const id = `simple-${f}`;
+          const label = document.createElement("label");
+          label.className = "flex items-center gap-2";
+          label.innerHTML = `<input type="checkbox" class="simple-cb" id="${id}"> <span>${f}</span>`;
+          container.appendChild(label);
+        });
+      }
+      renderSimpleList();
+
+      // 検索
+      document
+        .getElementById("simple-search")
+        .addEventListener("input", (e) => {
+          const q = e.target.value.toLowerCase();
+          document.querySelectorAll("#simple-list label").forEach((label) => {
+            label.style.display = label.textContent.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        });
+
+      // すべて選択 / 解除
+      let allSelected = false;
+      document
+        .getElementById("simple-toggle-all")
+        .addEventListener("click", () => {
+          allSelected = !allSelected;
+          document
+            .querySelectorAll(".simple-cb")
+            .forEach((cb) => (cb.checked = allSelected));
+          document.getElementById("simple-toggle-all").textContent = allSelected
+            ? "すべて解除"
+            : "すべて選択";
+        });
+
+      // ========= 2. アコーディオン =========
+      const categories = {
+        メタデータ: [
+          "チャンネルID",
+          "チャンネル名",
+          "チャンネルURL",
+          "チャンネルアイコンURL",
+          "カテゴリ",
+          "チャンネル開設日",
+          "事務所",
+          "会社",
+          "性別",
+        ],
+        パフォーマンス: [
+          "登録者数",
+          "期間別登録者獲得数",
+          "期間別視聴回数",
+          "推定視聴回数（投稿7日）",
+          "推定視聴回数（投稿30日）",
+          "推定視聴回数61秒以上（投稿7日）",
+          "推定視聴回数61秒以上（投稿30日）",
+          "推定視聴回数60秒以下（投稿7日）",
+          "推定視聴回数60秒以下（投稿30日）",
+        ],
+        その他: ["タイアップ実績", "関連度"],
+      };
+
+      function renderAccordion() {
+        const wrapper = document.getElementById("accordion-wrapper");
+        wrapper.innerHTML = "";
+        Object.entries(categories).forEach(([cat, items]) => {
+          const catDiv = document.createElement("div");
+          catDiv.className = "border rounded-lg";
+          catDiv.innerHTML = `
+          <button class="w-full flex justify-between items-center px-4 py-2 font-medium category-toggle">${cat}<span>▼</span></button>
+          <div class="category-items px-4 py-2 hidden"></div>
+        `;
+          const itemDiv = catDiv.querySelector(".category-items");
+          items.forEach((f) => {
+            const label = document.createElement("label");
+            label.className = "flex items-center gap-2 my-1";
+            label.innerHTML = `<input type="checkbox"> <span>${f}</span>`;
+            itemDiv.appendChild(label);
+          });
+          catDiv
+            .querySelector(".category-toggle")
+            .addEventListener("click", () => {
+              itemDiv.classList.toggle("hidden");
+            });
+          wrapper.appendChild(catDiv);
+        });
+      }
+      renderAccordion();
+
+      // ========= 3. デュアルリスト =========
+      const dualAvailable = document.getElementById("dual-available");
+      const dualSelected = document.getElementById("dual-selected");
+      fields.forEach((f) => {
+        const opt = document.createElement("option");
+        opt.value = f;
+        opt.textContent = f;
+        dualAvailable.appendChild(opt);
+      });
+      document
+        .getElementById("dual-add")
+        .addEventListener("click", () =>
+          moveOptions(dualAvailable, dualSelected)
+        );
+      document
+        .getElementById("dual-remove")
+        .addEventListener("click", () =>
+          moveOptions(dualSelected, dualAvailable)
+        );
+      function moveOptions(src, dst) {
+        Array.from(src.selectedOptions).forEach((opt) => {
+          dst.appendChild(opt);
+        });
+      }
+
+      // ========= 4. タイルカード =========
+      function renderTiles() {
+        const grid = document.getElementById("tile-grid");
+        grid.innerHTML = "";
+        fields.forEach((f) => {
+          const card = document.createElement("label");
+          card.className =
+            "relative cursor-pointer bg-white border rounded-xl p-4 shadow hover:ring-2 hover:ring-blue-500 flex flex-col items-start gap-2";
+          card.innerHTML = `
+          <input type="checkbox" class="absolute top-2 right-2"> 
+          <span class="font-medium">${f}</span>
+          <span class="text-xs text-gray-500">項目説明がここに入ります。</span>
+        `;
+          grid.appendChild(card);
+        });
+      }
+      renderTiles();
+
+      // ========= 5. ウィザード =========
+      let currentStep = 1;
+      function showStep(step) {
+        currentStep = step;
+        document
+          .querySelectorAll(".wizard-panel")
+          .forEach((p) => p.classList.add("hidden"));
+        document
+          .querySelector(`.wizard-panel[data-step="${step}"]`)
+          .classList.remove("hidden");
+        document.querySelectorAll(".wizard-step").forEach((s) => {
+          const n = +s.dataset.step;
+          s.classList.toggle("bg-blue-600", n <= step);
+          s.classList.toggle("text-white", n <= step);
+          s.classList.toggle("bg-gray-300", n > step);
+        });
+      }
+      // Step 1 → 2
+      document.getElementById("wizard-next").addEventListener("click", () => {
+        const tpl = document.querySelector('input[name="tpl"]:checked').value;
+        if (tpl === "custom") {
+          // Render simple check list inside wizard-fields
+          const wFields = document.getElementById("wizard-fields");
+          wFields.innerHTML = "";
+          fields.forEach((f) => {
+            const label = document.createElement("label");
+            label.className = "flex items-center gap-2";
+            label.innerHTML = `<input type="checkbox" class="wizard-cb"> <span>${f}</span>`;
+            wFields.appendChild(label);
+          });
+          showStep(2);
+        } else {
+          // Generate preview directly
+          const list =
+            tpl === "basic"
+              ? ["チャンネルID", "チャンネル名", "登録者数", "期間別視聴回数"]
+              : fields;
+          document.getElementById("wizard-preview").textContent =
+            "選択列: " + list.join(", ");
+          showStep(3);
+        }
+      });
+      // Step 2 → 3
+      document.getElementById("wizard-next2").addEventListener("click", () => {
+        const list = Array.from(document.querySelectorAll(".wizard-cb"))
+          .filter((cb) => cb.checked)
+          .map((cb) => cb.parentElement.textContent.trim());
+        document.getElementById("wizard-preview").textContent = list.length
+          ? "選択列: " + list.join(", ")
+          : "未選択";
+        showStep(3);
+      });
+      // Back buttons
+      document
+        .getElementById("wizard-back")
+        .addEventListener("click", () => showStep(1));
+      document
+        .getElementById("wizard-back2")
+        .addEventListener("click", () => showStep(2));
+      // Finish
+      document
+        .getElementById("wizard-finish")
+        .addEventListener("click", () => alert("CSV ダウンロード(ダミー)"));
+
+      // Init
+      showStep(1);
+    </script>
+  </body>
+</html>
